@@ -1,0 +1,19 @@
+*软件：SAS;
+*解决一个序号问题;
+*表 ： temp1   变量：A=日期 B= ID ;
+*任务：
+识别一个ID在月份上是否有断档，每断一次标记+1，依次类推;
+
+proc sort data=temp1;by B A ;run;
+
+data temp2;
+format datea date9.;
+set temp1;by B A;
+if first.B then do; c=1; datea=.;end;
+    else if month(mdy(month(A),1,year(A))-1)=month(datea) then c =1 
+        else c+1;
+output;
+datea=A;
+retain datea;
+run;
+
