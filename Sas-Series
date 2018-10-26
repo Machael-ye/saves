@@ -10,10 +10,9 @@ data temp2;
 format datea date9.;
 set temp1;by B A;
 if first.B then do; c=1; datea=.;end;
-    else if month(mdy(month(A),1,year(A))-1)=month(datea) then c =1 
-        else c+1;
+    else if month(mdy(month(A),1,year(A))-1) ^= month(datea) then c +1 ;
 output;
 datea=A;
-retain datea;
+retain datea C;
 run;
 
