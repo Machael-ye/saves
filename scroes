@@ -1,0 +1,27 @@
+*解决如下问题：
+次数 日期  id 本期积分 期初积分 期末积分 基础分 (为每月末数据)
+离职再入职时，积分为上期的基础分;
+
+*SAS执行 
+file TEMP 字段如上;
+
+proc sort data=temp;by id 日期;run;
+
+data temp1;
+format date2 date9.;
+set temp;by id 日期;
+if first.id then do;
+        日期=.;
+        score=0;
+        if 基础分=0 then 基础分=XX;*如果碰到这种情况如何初始化？;
+            end;
+   else if (基础分 = 0 or 基础分=. ) then do;
+         if month(mdy(year(date2),month(date2),1)-1) != month(日期) then 基础分=score; *这个表明是复职的;
+              else 基础分=？;   *如果没断，那么基础分是啥？;
+
+date2=日期;
+scroe=基础分;
+retain date2 score;
+run;
+
+
